@@ -18,27 +18,58 @@ date_format = "Jan 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 [[experience]]
-  title = "CEO"
-  company = "GenCoin"
-  company_url = ""
-  location = "California"
-  date_start = "2017-01-01"
+  title = "Data Engineer"
+  company = "Gogolook"
+  company_url = "https://whoscall.com/zh-TW/"
+  location = "Taipei"
+  date_start = "2019-05-20"
   date_end = ""
   description = """
-  Responsibilities include:
-  
-  * Analysing
-  * Modelling
-  * Deploying
   """
 
 [[experience]]
-  title = "Professor"
-  company = "University X"
-  company_url = ""
-  location = "California"
-  date_start = "2016-01-01"
-  date_end = "2016-12-31"
-  description = """Taught electronic engineering and researched semiconductor physics."""
+  title = "Data analyst"
+  company = "果實夥伴 (OneAD)"
+  company_url = "https://www.onead.com.tw/"
+  location = "Taipei"
+  date_start = "2017-03-31"
+  date_end = "2019-05-10"
+  description = """
+  Responsibilities include:
+  
+  * Data ETL workflow
+  * Cross device matching
+  * User retention rate
+  * Recommender system
+  * Demographic prediction
+  """
+
+[[experience]]
+  title = "Data analyst"
+  company = "Juvo+"
+  location = "Taipei"
+  date_start = "2016-03-07"
+  date_end = "2017-01-07"
+  description = """
+  Responsibilities include:
+
+  * Sales forecast system
+  * Seasonal product analysis
+  * Sales rankings and sales volume correlation analysis
+  """
+
+[[experience]]
+  title = "Data analyst"
+  company = "Cheetah Mobile"
+  location = "Taipei"
+  date_start = "2014-07-01"
+  date_end = "2016-02-18"
+  description = """
+  Responsibilities include:
+
+  * User feedback automation response system
+  * User feedback analysis and classification system
+  * Data visualization platform
+  """
 
 +++

@@ -1,6 +1,6 @@
 ---
 # Display name
-name: Nelson Bighetti
+name: Roymond Liao
 
 # Username (this should match the folder name)
 authors:
@@ -10,50 +10,47 @@ authors:
 superuser: true
 
 # Role/position
-role: Professor of Artificial Intelligence
+role: Machine Learning Engineer / Deep Learning Engineer / Data Scientist
 
 # Organizations/Affiliations
 organizations:
-- name: Stanford University
-  url: ""
+- name: Gogolook
+  url: "https://whoscall.com/zh-TW/"
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
+bio: Data Engineer of data research team
 
 interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
+- Machine Learning
+- Deep Learning
+- Big Data
+- Sports Analysis
+- Data visualization
 
 education:
   courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
+  - course: Master in Statistics
+    institution: Feng Chia University
+    year: 2011
+  - course: Bachelor in Statistics
+    institution: Ming Chuan University
     year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
 
 # Social/Academic Networking
 # For available icons, see: https://sourcethemes.com/academic/docs/widgets/#icons
 #   For an email link, use "fas" icon pack, "envelope" icon, and a link in the
 #   form "mailto:your-email@example.com" or "#contact" for contact widget.
 social:
-- icon: envelope
-  icon_pack: fas
-  link: '#contact'  # For a direct email link, use "mailto:test@example.org".
-- icon: twitter
+- icon: linkedin
   icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  link: https://www.linkedin.com/in/roymond-liao-739154b0
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/roymondliao  
+- icon: kaggle
+  icon_pack: fab
+  link: https://www.kaggle.com/yuyuliao
+
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.  
 # - icon: cv
@@ -65,11 +62,9 @@ email: ""
   
 # Organizational groups that you belong to (for People widget)
 #   Set this to `[]` or comment out if you are not using People widget.  
-user_groups:
-- Researchers
-- Visitors
+user_groups: []
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Yuyu are being a Data Engineer at Gogolook Inc. He has four years of experience in the field of data science. The main languages use Python and R. Also, has the passion for data analysis, machine learning and deep learning and through the process of understanding theory and practice with relevant research is used to solve various problems in products. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate. 
+In addition, willing to learning the various tools in data engineering and system architecture, towards the field of data science to continue to learn and expand the knowledge.

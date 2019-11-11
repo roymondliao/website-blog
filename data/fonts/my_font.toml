@@ -1,0 +1,15 @@
+# Font style metadata
+name = "roymond"
+
+# Optional Google font URL
+#google_fonts = "Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono"
+google_fonts = "Bitter:400,700|Open+Sans:400,400italic,700|Raleway"
+# Font families
+heading_font = "Bitter"
+body_font = "Open+Sans"
+nav_font = "Open+Sans"
+mono_font = "Raleway"
+
+# Font size
+font_size = "18"
+font_size_small = "14"

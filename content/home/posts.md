@@ -8,7 +8,7 @@ active = true  # Activate this widget? true/false
 weight = 60  # Order that this section will appear.
 
 title = "Recent Posts"
-subtitle = ""
+subtitle = "keep writing and keep learning"
 
 [content]
   # Page type to display. E.g. post, talk, or publication.
@@ -28,7 +28,9 @@ subtitle = ""
     tag = ""
     category = ""
     publication_type = ""
-    exclude_featured = false
+    exclude_featured = true
+    exclude_past = false
+    exclude_future = false
   
 [design]
   # Toggle between the various page layout types.

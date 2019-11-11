@@ -17,35 +17,54 @@ date_format = "Jan 2006"
 #   `title`, `organization` and `date_start` are the required parameters.
 #   Leave other parameters empty if not required.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
-
 [[item]]
   organization = "Coursera"
   organization_url = "https://www.coursera.org"
-  title = "Neural Networks and Deep Learning"
-  url = ""
-  certificate_url = "https://www.coursera.org"
-  date_start = "2018-10-01"
+  title = "How to Win a Data Science Competition: Learn from Top Kagglers"
+  url = "https://www.coursera.org/learn/competitive-data-science/home/welcome"
+  certificate_url = "https://www.coursera.org/account/accomplishments/certificate/N9J2G2ED86QJ?utm_medium=certificate&utm_source=link&utm_campaign=copybutton_certificate"
+  date_start = "2019-09-02"
   date_end = ""
   description = ""
 
 [[item]]
-  organization = "edX"
-  organization_url = "https://www.edx.org"
-  title = "Blockchain Fundamentals"
-  url = "https://www.edx.org/professional-certificate/uc-berkeleyx-blockchain-fundamentals"
-  certificate_url = "https://www.edx.org"
-  date_start = "2018-03-01"
+  organization = "Coursera"
+  organization_url = "https://www.coursera.org"
+  title = "Introduction to Deep Learning"
+  url = "https://www.coursera.org/learn/competitive-data-science/home/welcome"
+  certificate_url = "https://www.coursera.org/account/accomplishments/certificate/K6CHF5DRMAZ7?utm_medium=certificate&utm_source=link&utm_campaign=copybutton_certificate"
+  date_start = "2019-07-20"
   date_end = ""
-  description = "Formulated informed blockchain models, hypotheses, and use cases."
+  description = ""
+
+[[item]]
+  organization = "Coursera"
+  organization_url = "https://www.coursera.org"
+  title = "Machine Learning"
+  url = "https://www.coursera.org/learn/machine-learning/home/welcome"
+  certificate_url = "https://www.coursera.org/account/accomplishments/certificate/JSNE5CYQ4FDG?utm_medium=certificate&utm_source=link&utm_campaign=copybutton_certificate"
+  date_start = "2017-02-05"
+  date_end = ""
+  description = ""
+
+[[item]]
+  organization = "Udemy"
+  organization_url = "https://www.udemy.com/"
+  title = "Data Science: Deep Learning in Python"
+  url = ""
+  certificate_url = "https://www.udemy.com/certificate/UC-0NYWYTAM/"
+  date_start = "2017-02-06"
+  date_end = ""
+  description = ""
   
 [[item]]
-  organization = "DataCamp"
-  organization_url = "https://www.datacamp.com"
-  title = "Object-Oriented Programming in R: S3 and R6 Course"
+  organization = "Udemy"
+  organization_url = "https://www.udemy.com/"
+  title = "Machine Learning A-Z™: Hands-On Python & R In Data Science"
   url = ""
-  certificate_url = "https://www.datacamp.com"
+  certificate_url = "https://www.udemy.com/certificate/UC-TFHKWIG9/"
   date_start = "2017-07-01"
-  date_end = "2017-12-21"
+  date_end = ""
   description = ""
 
 +++

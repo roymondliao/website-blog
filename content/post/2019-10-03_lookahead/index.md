@@ -17,16 +17,13 @@ markup: mmark
 # projects = ["market-report"]
 
 # Featured image
-# To use, add an image named `featured.jpg/png` to your project's folder. 
+# To use, add an image named `featured.jpg/png` to your page's folder.
+# Placement options: 1 = Full column width, 2 = Out-set, 3 = Screen-width
+# Focal point options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
 image:
-  # Caption (optional)
-  caption: ""
-
-  # Focal point (optional)
-  # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+  placement: 2
+  caption: "[Photo by Andrew Neel on Unsplash](https://unsplash.com/photos/aebPbwAWjDs)"
   focal_point: ""
-
-  # Show image only in page previews?
   preview_only: false
 ---
 ## Introduction

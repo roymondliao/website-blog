@@ -1,7 +1,7 @@
 ---
 title: "Transformer Part 1"
 date: 2019-12-16
-lastmod: 2019-12-16
+lastmod: 2020-01-02
 draft: false
 authors: ["Roymond Liao"]
 categories:
@@ -155,6 +155,7 @@ image:
   </figcaption>
 </center>
 </figure>
+
 另外要注意在使用 beam search 所謂遇到的問題，在 Andrew Ng 大師的[課程](https://www.coursera.org/specializations/deep-learning)中提到
 
 * 消除長度對計算機率影響（Length Normalization）
@@ -170,9 +171,40 @@ image:
 
 ----
 
-在理解完 Seq2Seq model 後，所遇到的問題該如何解決? 那就是要靠文章最一開頭所提的內容 `Attention(注意力機制)`。
+在理解完 Seq2Seq model 後，所遇到的問題該如何解決? 那就是要靠文章最一開頭所提的內容 `Attention mechanism(注意力機制)`。
 
-Attention 的概念在 2015 年被 Bahdanau et al. [1]所提出，
+**Attention** 的概念在 2014 年被 Bahdanau et al. [3] 所提出，解決了 encoder-decoder 架構的模型在 decoder 必須依賴一個固定向量長度的 context vector 的問題。實際上 attention mechanism 也符合人類在生活上的應用，例如：當你在閱讀一篇文章時，會從上下文的關鍵字詞來推論句子所以表達的意思，又或者像是在聆聽演講時，會捕捉講者的關鍵字，來了解講者所要描述的內容，這都是人類在注意力上的行為表現。
+
+用比較簡單的講法： attention mechanism 可以幫助模型對輸入 sequence 的每個部分賦予不同的權重， 然後抽出更加關鍵的重要訊息，使模型可以做出更加準確的判斷。
+
+Attention model 的架構如圖四：
+
+
+
+<figure class="image">
+<center>
+  <img src="./attention_bahdanau.png" style="zoom:60%" />
+  <figcaption>
+  圖四(Image credit:[3])
+  </figcaption>
+</center>
+</figure>
+
+Decoder's conditional probabilit: $P\left(y_i|y_1, y_2,\dots,y_{i-1}, x\right) = g\left(y_{i-1}, s_i, c_i\right)$
+
+$s_i$ is hidden state: $s_i = f(s_{i-1}, y_{i-1}, c_i)$
+
+Here the probability is conditioned on a distinct context vector $c_i$ for each target word $y_i$
+
+The context vector $c_i$ is depends on a sequence of annotation $(h_1, h_2,\dots,h_{T_x})$  to which an encoder maps the input sentence.
+
+$c_i$ 是針對 $h_j$ 進行 weight sum 計算 :$c_i = \displaystyle\sum_{j=1}^{T_x}\alpha_{ij}h_j$
+
+$\alpha_{ij}$ 則是對應 $h_j$ 的權重： $\alpha_{ij} = \frac{exp(e_{ij})}{\sum_{k=1}{T_x}exp(e_{ik})}$
+
+$e_{ij}$ 是 alignment model which scores how well the inputs around position j and the output at position i match. The score is based on the RNN hidden state $s_{i−1}$  and the $j-th$ annotation $h_j$ of the input sentence.：$e_{ij} = a(s_{i-1}, h_j)$
+
+
 
 attenion value and query 的理解不要被公式混淆，而是從 attention 的概念去了解，query 就是
 
@@ -182,6 +214,10 @@ attenion value and query 的理解不要被公式混淆，而是從 attention �
 Paper:
 [1] [Ilya Sutskever, Oriol Vinyals, and Quoc V. Le, Sequence to Sequence Learning with Neural Networks(2015)](https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf)
 [2] [Alex Lamb, Anirudh Goyal, Ying Zhang, Saizheng Zhang, Aaron Courville, Yoshua Bengio, Professor Forcing: A New Algorithm for Training Recurrent Networks(2016)](https://arxiv.org/pdf/1610.09038.pdf)
+[3] [Dzmitry Bahdanau, KyungHyun Cho, Yoshua Bengio, NEURAL MACHINE TRANSLATION BY JOINTLY LEARNING TO ALIGN AND TRANSLATE(2014)](https://arxiv.org/abs/1409.0473)
+[4] [Minh-Thang Luong, Hieu Pham, Christopher D. Manning, Effective Approaches to Attention-based Neural Machine Translation(2015)](https://arxiv.org/abs/1508.04025)
+
+
 
 Blog:
 [1] https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/

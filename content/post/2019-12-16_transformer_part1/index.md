@@ -57,20 +57,17 @@ image:
 1. Input sequence $(x_1, x_2, x_3, \dots, x_s)$  經過 embedding layer 的轉換，得到每個 word 的 embedding vector
 
 2. Encoder 把所有輸入序列 embedding vector 消化後，將資訊壓縮轉換為一個向量 $C$，稱之為 context vector
+  
    $$
    \begin{align}
    h_s^{e} & = f_{enc}\left(h_{s-1}^{e}, e_{x_{s-1}}, W_{enc}\right) \\
-   C & = h_s^e \space or \space C = q(h_s^e)  \space or \space  C = q\left(h_1^e, h_2^e, \dots, h_s^e\right)
+   C & = h_s^e \text {，最後一步的 hidden state} \\
+   C & = q(h_s^e) \text {，最後一步的 hidden state 做 transform } \\
+   C & = q\left(h_1^e, h_2^e, \dots, h_s^e\right) \text {，每一步的 hidden state 做 transform }
    \end{align}
    $$
    
-   $f_{enc}(\cdot)$ 表示 Encoder 中的 RNN function, 參數為 $W_{enc}$
-
-   $e_{x_s}$ 表示 $x_s$ 的 embedding vector
-
-   $h_s^e$ 表示在時間 $s$ 的 hidden state
-
-   $C$ 可以表示為 Encoder 最後的 hidden state 或是經過函數 $q(\cdot)$ 的轉換
+   其中 $f_{enc}(\cdot)$ 表示 Encoder 中的 RNN function，參數為 $W_{enc}$。$e_{x_s}$ 表示 $x_s$ 的 embedding vector，$h_s^e$ 表示在時間 $s$ 的 hidden state，$C$ 可以表示為 Encoder 最後的 hidden state 或是經過函數 $q(\cdot)$ 的轉換。
 
 3. Decoder 則根據 context vector 的資訊來生成文字，output sequence $(y_1, y_2, y_3, \dots, y_t)$
 
@@ -81,16 +78,9 @@ image:
    O_{t} & = g\left(h_t^d\right)
    \end{align}
    $$
-   
-   $h_0^d$ 為 context vector 傳進來當作 Decoder 的初始 hidden state 
 
-   $f_{dec}(\cdot)$ 表示 Decoder 中的 RNN function, 參數為 $W_{dec}$
-
-   $h_t^d$ 表示 Decoder在時間 $t$ 的 hidden state
-
-   $e_{y_t}$ 表示前一步的所得到的 $y_{t-1}$ 結果當作輸入，$y_0$ 都是以特殊索引 <BOS> 當作輸入
-
-   $g(\cdot)$ 為 output layer，一般都是 softmax function
+   其中 $h_{0}^{d}$ 為 context vector 傳進來當作 Decoder 的初始 hidden state，$f_{dec}(\cdot)$ 表示 Decoder 中的 RNN function，參數為 $W_{dec}$。$h_{t}^{d}$ 表示 Decoder在時間 $t$ 的 hidden state，$e_{y_{t}}$ 表示前一步的所得到的 $y_{t-1}$ 結果當作輸入，$y_0$ 都是以特殊索引 \<BOS\> 當作輸入。
+   $g(\cdot)$ 為 output layer，一般都是 softmax function。
 
 過程就只是簡單的三個步驟，雖然看起來簡單，但當中有些細節是需要注意的。
 
@@ -98,27 +88,29 @@ image:
 
 * 特殊索引
 
-  在每個句子做 one-hot-encoder 的轉換時，會在句子的前後加上 <BOS> 與 <EOS>
-  * BOS: Begin of sequence，在預測的時候我們並沒有對應的答案，所以會先以 <BOS> 當作 $Y_0$ 的 target input
+    在每個句子做 one-hot-encoder 的轉換時，會在句子的前後加上 \<BOS\> 與 \<EOS\>
+
+  * BOS: Begin of sequence，在預測的時候我們並沒有對應的答案，所以會先以 \<BOS\> 當作 $Y_0$ 的 target input
   * EOS: End of sequence，用意是要告訴 model 當出現這個詞的時候就是停止生成文字，如果沒有這個詞，模型會無限迴圈的一直生成下去
 
-  除了上述的 <BOS> 與 <EOS> 外，還有 <PAD> 與 <UNK>
+    除了上述的 \<BOS\> 與 \<EOS\> 外，還有 \<PAD\> 與 \<UNK\>
 
-  * PAD: 由於 RNN 的 parameters 是共享的，所以在 input 的維度就需要保持相同，但並不是每個句子的長度都是同樣的，有的可能長度是 3 ，有的長度可能是 5，所以為了處理不同 input sequence 長度不同的狀況，增加了 <PAD> 的字詞，來讓每次 **batch** 的 input sequence 的長度都是相同的
-  * UNK: 如果輸入的字詞在 corpus 是沒有出現過的，就會用 <UNK> 索引來代替
+  * PAD: 由於 RNN 的 parameters 是共享的，所以在 input 的維度就需要保持相同，但並不是每個句子的長度都是同樣的，有的可能長度是 3 ，有的長度可能是 5，所以為了處理不同 input sequence 長度不同的狀況，增加了 \<PAD\> 的字詞，來讓每次 **batch** 的 input sequence 的長度都是相同的
+  * UNK: 如果輸入的字詞在 corpus 是沒有出現過的，就會用 \<UNK\> 索引來代替
 
 * Encoder layer 與 Decoder layer 的選擇
 
-  Encoder 與 Decoder 中的 RNN function 可以是 simple RNN / LSTM / GRU，又或者是一個 bidirectional LSTM 的架構在裡面，也可以是一個 multi layer LSTM
+    Encoder 與 Decoder 中的 RNN function 可以是 simple RNN / LSTM / GRU，又或者是一個 bidirectional LSTM 的架構在裡面，也可以是一個 multi layer LSTM
 
 * Teacher forcing 
 
-  在 training model 時 ，為了提高 model 的準確度與訓練速度，採用了 [Teacher forcing training](https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/) 方法，圖二就是 teacher foring 的概念，在 training 的時候直接告訴 model 實際的答案，省去 model 自己去尋找到正確的答案。另外也有提出 [Professor Forcing](https://arxiv.org/abs/1610.09038) 的做法，尚未理解這方法的概念，提供當作參考。
+    在 training model 時 ，為了提高 model 的準確度與訓練速度，採用了 [Teacher forcing training](https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/) 方法，圖二就是 teacher foring 的概念，在 training 的時候直接告訴 model 實際的答案，省去 model 自己去尋找到正確的答案。另外也有提出 [Professor Forcing](https://arxiv.org/abs/1610.09038) 的做法，尚未理解這方法的概念，提供當作參考。
 
 <figure class="image">
 <center>
   <img src="./teacher_forcing.png" style="zoom:80%" />
-  <figcaption>圖二 (Image credit: <a href="https://towardsdatascience.com/what-is-teacher-forcing-3da6217fed1c"> link)
+  <figcaption>
+  圖二 (Image credit: <a href="https://towardsdatascience.com/what-is-teacher-forcing-3da6217fed1c">LINK</a>)
   </figcaption>
 </center>
 </figure>
@@ -127,15 +119,15 @@ image:
 
 * Beam search
 
-  在 prediction  model 時，每一步的 output 都是要計算出在 corpus 中生成最可能的那個字詞 
+    在 prediction  model 時，每一步的 output 都是要計算出在 corpus 中生成最可能的那個字詞 
   
-  $$
-  \begin{align}
-  \hat{y_t} = argmax\space p_{\theta}(y | \hat{y}_{1:(t-1)}) 
-  \end{align}
-	$$
+    $$
+    \begin{align}
+    \hat{y_t} = argmax\space p_{\theta}(y | \hat{y}_{1:(t-1)}) 
+    \end{align}
+	  $$
 	
-	其中 $\hat{y}_{1:(t-1)} = \hat{y}_1, \dots, \hat{y}_{t-1}$ 為前面 $t-1$ 步所生成的字詞。以一個簡單的概念來思考，每一步的 output 都是該步所得到的最大條件機率，那這樣的 greedy search 所得到的結果對於我們的目標並非是最優的，得到的是每個字詞的最大條件機率，而並非是整個句子的最大條件機率，所以這樣的狀況下你所得的的翻譯可能不會是最適合的。
+	  其中 $$\hat{y}_{1:(t-1)} = \hat{y}_1,\dots,\hat{y}_{t-1}$$ 為前面 $t-1$ 步所生成的字詞。以一個簡單的概念來思考，每一步的 output 都是該步所得到的最大條件機率，那這樣的 greedy search 所得到的結果對於我們的目標並非是最優的，得到的是每個字詞的最大條件機率，而並非是整個句子的最大條件機率，所以這樣的狀況下你所得的的翻譯可能不會是最適合的。
 	
 	Beam search 就是為了解決這樣的問題而提出的，在每一步的生成過程中，生成 $B$ 的最可能的文字序列作為約束，其中 $B$ 的大小為 beam width，是一個 hyperparamter。$B$ 值越大可以得到更好的結果，但相對的計算量也增加。
 	
@@ -147,11 +139,11 @@ image:
 	4. 在成長搜尋樹後，進行剪枝的工作，只留下 B 個最高條件機率的葉節點後，再進行下一個位置的序列生成。
 	
 	Beam search 的實作可以參考 Blog:[4]。
+  
 <figure class="image">
 <center>
   <img src="./beam_search.png" style="zoom:80%" />
-  <figcaption>
-  圖三(Image credit: <a href="https://distill.pub/2017/ctc/"> link)
+  <figcaption>圖三 (Image credit: <a href="https://distill.pub/2017/ctc/"> LINK</a>)
   </figcaption>
 </center>
 </figure>
@@ -178,8 +170,6 @@ image:
 用比較簡單的講法： attention mechanism 可以幫助模型對輸入 sequence 的每個部分賦予不同的權重， 然後抽出更加關鍵的重要訊息，使模型可以做出更加準確的判斷。
 
 Attention model 的架構如圖四：
-
-
 
 <figure class="image">
 <center>
@@ -211,22 +201,33 @@ attenion value and query 的理解不要被公式混淆，而是從 attention �
 
 # Reference
 
-Paper:
+**Paper:**
+
 [1] [Ilya Sutskever, Oriol Vinyals, and Quoc V. Le, Sequence to Sequence Learning with Neural Networks(2015)](https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf)
+
 [2] [Alex Lamb, Anirudh Goyal, Ying Zhang, Saizheng Zhang, Aaron Courville, Yoshua Bengio, Professor Forcing: A New Algorithm for Training Recurrent Networks(2016)](https://arxiv.org/pdf/1610.09038.pdf)
+
 [3] [Dzmitry Bahdanau, KyungHyun Cho, Yoshua Bengio, NEURAL MACHINE TRANSLATION BY JOINTLY LEARNING TO ALIGN AND TRANSLATE(2014)](https://arxiv.org/abs/1409.0473)
+
 [4] [Minh-Thang Luong, Hieu Pham, Christopher D. Manning, Effective Approaches to Attention-based Neural Machine Translation(2015)](https://arxiv.org/abs/1508.04025)
 
+**Blog:**
 
-
-Blog:
 [1] https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/
+
 [2] https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture08-nmt.pdfh
+
 [3] https://ithelp.ithome.com.tw/articles/10208587
+
 [4] https://machinelearningmastery.com/beam-search-decoder-natural-language-processing/
+
 [5] [Seq2seq pay Attention to Self Attention: Part 1](https://medium.com/@bgg/seq2seq-pay-attention-to-self-attention-part-1-%E4%B8%AD%E6%96%87%E7%89%88-2714bbd92727)
+
 [6] [Seq2seq pay Attention to Self Attention: Part 2](https://medium.com/@bgg/seq2seq-pay-attention-to-self-attention-part-2-%E4%B8%AD%E6%96%87%E7%89%88-ef2ddf8597a4)
+
 [7] [Visualizing A Neural Machine Translation Model (Mechanics of Seq2seq Models With Attention)](https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/)
+
 [8] http://zake7749.github.io/2017/09/28/Sequence-to-Sequence-tutorial/
+
 [9] https://www.zhihu.com/question/54356960
 

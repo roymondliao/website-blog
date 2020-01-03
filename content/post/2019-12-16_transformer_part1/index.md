@@ -230,4 +230,3 @@ attenion value and query 的理解不要被公式混淆，而是從 attention �
 [8] http://zake7749.github.io/2017/09/28/Sequence-to-Sequence-tutorial/
 
 [9] https://www.zhihu.com/question/54356960
-

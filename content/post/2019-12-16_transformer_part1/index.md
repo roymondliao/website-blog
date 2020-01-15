@@ -7,7 +7,7 @@ authors: ["Roymond Liao"]
 categories:
     - NLP
     - Deep Learning
-tags: ["Attention"]
+tags: ["Seq2Seq", "Teacher forcing", "Beam search"]
 markup: mmark
 image:
   placement: 2
@@ -22,15 +22,13 @@ image:
 
 在跟完整個 `Attention Is All You Need` 的影片後，還是有太多細節是不清楚的，因為自己本身也不是這個領域的，所以開始追論文中所提到的一些關鍵名詞，就開始從 $seq2seq \rightarrow attention \rightarrow self-attention$。這中間 有太多知識需要記錄下來，所以將論文的內容分成三部曲，來記錄閱讀下來的點點滴滴:
 
-* Part 1: Attention 與 Self-attention 的理解
-* Part 2: Transformer 的架構探討
-* Part 3: Attention Is All You Need 實作
+* Part 1: Sequence to sequence model 起源
+* Part 2: Attention 與 Self-attention 的理解
+* Part 3: Transformer 的架構探討與深入理解
 
-# Attention
+要談論 `Attention Is All You Need` 這篇 paper 就必須從 seq2seq 講起，seq2seq 全名為 Sequence to Sequence[1]，是一個 Encoder - Decoder 架構的模型，在 2014 年被提出，被廣泛的應用於 Machine Translation, Text Summarization, Conversational Modeling, Image Captioning, and more.
 
-要說起 attention 就必須從 seq2seq 講起，seq2seq 全名為 Sequence to Sequence[1]，是一個 Encoder - Decoder 架構的模型，在 2014 年被提出，被廣泛的應用於 Machine Translation, Text Summarization, Conversational Modeling, Image Captioning, and more.
-
-### Seq2Seq model
+### Sequence to sequence model
 
 #### Introduction
 簡單來說，期望輸入一串序列(source)，輸出一串序列(target)，而這個 source 與 target 可以是什麼呢？
@@ -163,41 +161,8 @@ image:
 
 ----
 
-在理解完 Seq2Seq model 後，所遇到的問題該如何解決? 那就是要靠文章最一開頭所提的內容 `Attention mechanism(注意力機制)`。
-
-**Attention** 的概念在 2014 年被 Bahdanau et al. [3] 所提出，解決了 encoder-decoder 架構的模型在 decoder 必須依賴一個固定向量長度的 context vector 的問題。實際上 attention mechanism 也符合人類在生活上的應用，例如：當你在閱讀一篇文章時，會從上下文的關鍵字詞來推論句子所以表達的意思，又或者像是在聆聽演講時，會捕捉講者的關鍵字，來了解講者所要描述的內容，這都是人類在注意力上的行為表現。
-
-用比較簡單的講法： attention mechanism 可以幫助模型對輸入 sequence 的每個部分賦予不同的權重， 然後抽出更加關鍵的重要訊息，使模型可以做出更加準確的判斷。
-
-Attention model 的架構如圖四：
-
-<figure class="image">
-<center>
-  <img src="./attention_bahdanau.png" style="zoom:60%" />
-  <figcaption>
-  圖四(Image credit:[3])
-  </figcaption>
-</center>
-</figure>
-
-Decoder's conditional probabilit: $P\left(y_i|y_1, y_2,\dots,y_{i-1}, x\right) = g\left(y_{i-1}, s_i, c_i\right)$
-
-$s_i$ is hidden state: $s_i = f(s_{i-1}, y_{i-1}, c_i)$
-
-Here the probability is conditioned on a distinct context vector $c_i$ for each target word $y_i$
-
-The context vector $c_i$ is depends on a sequence of annotation $(h_1, h_2,\dots,h_{T_x})$  to which an encoder maps the input sentence.
-
-$c_i$ 是針對 $h_j$ 進行 weight sum 計算 :$c_i = \displaystyle\sum_{j=1}^{T_x}\alpha_{ij}h_j$
-
-$\alpha_{ij}$ 則是對應 $h_j$ 的權重： $\alpha_{ij} = \frac{exp(e_{ij})}{\sum_{k=1}{T_x}exp(e_{ik})}$
-
-$e_{ij}$ 是 alignment model which scores how well the inputs around position j and the output at position i match. The score is based on the RNN hidden state $s_{i−1}$  and the $j-th$ annotation $h_j$ of the input sentence.：$e_{ij} = a(s_{i-1}, h_j)$
-
-
-
-attenion value and query 的理解不要被公式混淆，而是從 attention 的概念去了解，query 就是
-
+在理解完 Seq2Seq model 後，所遇到的問題該如何解決? 那就是要靠 `Attention Is All You Need` 這篇 paper 的主要重點之一 `Attention mechanism(注意力機制)`，
+這部分將會在 part 2 的時候介紹。
 
 # Reference
 

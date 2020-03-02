@@ -1,5 +1,5 @@
 ---
-title: "Transformer Part 1"
+title: "Transformer Part 1 - Seq2Seq"
 date: 2019-12-16
 lastmod: 2020-01-02
 draft: false
@@ -123,7 +123,7 @@ image:
     \begin{align}
     \hat{y_t} = argmax\space p_{\theta}(y | \hat{y}_{1:(t-1)}) 
     \end{align}
-	  $$
+	$$
 	
 	  其中 $$\hat{y}_{1:(t-1)} = \hat{y}_1,\dots,\hat{y}_{t-1}$$ 為前面 $t-1$ 步所生成的字詞。以一個簡單的概念來思考，每一步的 output 都是該步所得到的最大條件機率，那這樣的 greedy search 所得到的結果對於我們的目標並非是最優的，得到的是每個字詞的最大條件機率，而並非是整個句子的最大條件機率，所以這樣的狀況下你所得的的翻譯可能不會是最適合的。
 	
@@ -137,7 +137,7 @@ image:
 	4. 在成長搜尋樹後，進行剪枝的工作，只留下 B 個最高條件機率的葉節點後，再進行下一個位置的序列生成。
 	
 	Beam search 的實作可以參考 Blog:[4]。
-  
+
 <figure class="image">
 <center>
   <img src="./beam_search.png" style="zoom:80%" />

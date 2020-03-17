@@ -185,7 +185,16 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   $$
   y = \{y_1, \dots, y_C\}, y_i \in R^K
   $$
-  K 為字詞的數量，C 為標題的長度。
+  K 為字詞的數量，C 為標題的長度。下圖為作者這本篇論文所採用的 LSTM 架構：
+  
+  <figure class="image">
+  <center>
+    <img src="./attention_sotf_and_hard.png" style="zoom:50%" />
+    <figcaption>
+    圖五(Image credit:[Paper 2])
+    </figcaption>
+  </center>
+  </figure>
   
   利用 affine transformation 的方式  $$T_{s, t} : R^s \rightarrow R^t$$ 來表達 LSTM 的公式：
   $$
@@ -227,7 +236,7 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   * $$g_t$$ : canaidate cell
   * $$c_t$$ : memory cell
   * $$h_t$$ : hidden state
-  * $$Ey_{t-1}$$ 是詞 $$y_{t-1}$$ 的 embedding vector，$$E \in R^{m \times k}$$ 為 embedding matrix
+  * $$Ey_{t-1}$$ 是詞 $$y_{t-1}$$ 的 embedding vector，$$E \in R^{m \times k}$$ 為 embedding matrix，m 為 embedding dimention
   * $$\hat{Z} \in R^D$$ 是 context vector，代表捕捉特定區域視覺訊息的上下文向量，與時間 $t$ 有關，所以是一個動態變化的量
   
   特別注意的是作者在給定 memory state 與 hidden state 的初始值的計算方式使用了兩個獨立的多層感知器(MLP)，其輸入是各個圖像區域特徵的平均，計算公式如下： 
@@ -235,14 +244,14 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   c_0 = f_{init, c}( \frac{1}{L} \sum_{i}^L a_i) \\
   h_0 = f_{init, h}( \frac{1}{L} \sum_{i}^L a_i) \\
   $$
-  以及作者為了計算在 $t$ 時間下所關注的 context vector $\hat{Z_t}$ 定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。權重 $$\alpha_i$$ 的產生是透過輸入 attention vector $a_i$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
+  以及作者為了計算在 $t$ 時間下所關注的 context vector $\hat{Z_t}$ **定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。**權重 $$\alpha_i$$ 的產生是透過輸入 annotation vector $a_i$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
   
   
   $$
   \begin{align}
   e_{ti} = f_{att}(a_i, h_{t-1}) \tag4 \\
   \alpha_{ti} = \frac{exp(e_{ti})}{\sum_{k=1}^{L}exp{e_{tk}}} \tag5 \\
-  \hat{Z_t} = \phi(\{a_i\}, \{\alpha_{ti}\}) \tag6
+  \hat{Z_t} = \phi(\{a_i\}, \{\alpha_{i}\}) \tag6
   \end{align}
   $$
   
@@ -250,17 +259,25 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   $$
   p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7
   $$
-  其中 $$L_o \in R^{K \times m}, L_h \in R^{m \times n}, L_z \in R^{m \times D}$$。
-  
+  其中 $$L_o \in R^{K \times m}, L_h \in R^{m \times n}, L_z \in R^{m \times D}$$，m 與 n 分別為 embedding dimension 與 LSTM dimension。
   
 
-對於函數 $\phi$ 作者提出了兩種 attention  machansim，對應於將權重附加到圖像區域的兩個不同策略。
+對於函數 $\phi$ 作者提出了兩種 attention  machansim，對應於將權重附加到圖像區域的兩個不同策略。根據上述的講解，搭配下圖為 Xu et al. [Paper 2] 的模型架構解析，更能了解整篇論文模型的細節：
+
+<figure class="image">
+<center>
+  <img src="./attention_soft_and_hard_example.png" style="zoom:90%" />
+  <figcaption>
+  圖六
+  </figcaption>
+</center>
+</figure>
 
 #### Hard attention (Stochastic Hard Attention)
 
 在 hard attention 中定義區域變數(location variables) $s_{t, i}$ 為在 t 時間下，模型決定要關注的圖像區域，用 one-hot 的方式來表示，要關注的區域 $i$ 為 1，否則為 0。
 
-$s_{t, i}$ 被定為一個淺在變數(latent variables)，並且以 multinoulli distriubtion 作為參數 $\alpha_{t, i}$ 的分佈，而 $\hat{Z_t}$ 則被視為一個隨機變數，公式如下：
+$s_{t, i}$ 被定為一個淺在變數(latent variables)，並且以 **multinoulli distriubtion** 作為參數 $\alpha_{t, i}$ 的分佈，而 $\hat{Z_t}$ 則被視為一個隨機變數，公式如下：
 $$
 p(s_{t, i} = 1 | s_{j, t}, a) = \alpha_{t, i} \tag8\\
 $$
@@ -290,13 +307,20 @@ Soft attention 所關注的圖像區域並不像 hard attention 在特定時間�
 $$
 \mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
 $$
-這計算方式是參考前面所介紹的 Bahdanau attention 而來。
+這計算方式將 weight vector $\alpha_i$ 參數化，讓公式是可微的，可以透過 backpropagation 做到 end-to-end 的學習。其方法是參考前面所介紹的 Bahdanau attention 而來。
 
-作者
+由於公式(7)的定義了生成下一個 $t$ 時間的字詞機率，所以在這邊作者定義了 $$n_t = L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})$$，透過 expect context vector 
+
+另外 soft attention 在最後做文字的預測時作者定義了 softmax $k^{th}$ 的 normalized weighted geometric mean。
+$$
+\begin{align}
+NWGM[p(y_t=k|a)] & = \frac{\prod_i exp(n_{t,k,i})^{p(s_{t,i} = 1 | a)}}{\sum_j\prod_i exp(n_{t,j,i})^{p(s_{t,i} = 1 | a)}} \\
+& = \frac{exp\left(\mathbb{E_{p(s_t) | a}[n_{t,k}]}\right)}{\sum_j exp\left(\mathbb{E_{p(s_t) | a}[n_{t,j}]}\right)}
+\end{align}
+$$
 
 
 
-> Attention 要實現的就是在 decoder 的不同時刻可以關注不同的圖像區域，進而可以生成更合理的詞。
 
 ### Global Attention & Local Attention
 
@@ -308,8 +332,9 @@ $$
 
 
 
+總結來說：
 
-attenion value and query 的理解不要被公式混淆，而是從 attention 的概念去了解，query 就是
+>  Attention 要實現的就是在 decoder 的不同時刻可以關注不同的圖像區域或是句子中的文字，進而可以生成更合理的詞。
 
 ## Refenece
 
@@ -327,6 +352,8 @@ Illustrate:
 3. https://blog.floydhub.com/attention-mechanism/#bahdanau-atth
 4. https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture08-nmt.pdf
 5. https://www.cnblogs.com/Determined22/p/6914926.html
+6. https://jhui.github.io/2017/03/15/Soft-and-hard-attention/
+7. http://download.mpi-inf.mpg.de/d2/mmalinow-slides/attention_networks.pdf
 
 Tutorial:
 

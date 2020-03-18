@@ -181,10 +181,12 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 
 * Decoder
 
-  採用 LSTM 模型來生成字詞，而因應圖片的內容不同，所以標題的長度是不相同的，作者將標題 $y$ encoded 成一個 one-hot encoding 的方式來表示
+  採用 LSTM 模型來生成字詞，而因應圖片的內容不同，所以標題的長度是不相同的，作者將標題 $y $ encoded 成一個 one-hot encoding 的方式來表示
+  
   $$
   y = \{y_1, \dots, y_C\}, y_i \in R^K
   $$
+  
   K 為字詞的數量，C 為標題的長度。下圖為作者這本篇論文所採用的 LSTM 架構：
   
   <figure class="image">
@@ -303,9 +305,9 @@ $$
 
 #### Soft attention (Deterministic Soft Attention)
 
-Soft attention 所關注的圖像區域並不像 hard attention 在特定時間只關注特定的區域，在 soft attention 中則是每一個區域都關注，只是關注的程度不同。透過對每個圖像區域 $a_{i}$ 與對應的 weight $\alpha_{t,i}$ ，$\hat{Z}_t$ 就可以直接對權重做加總求和，公式如下：
+Soft attention 所關注的圖像區域並不像 hard attention 在特定時間只關注特定的區域，在 soft attention 中則是每一個區域都關注，只是關注的程度不同。透過對每個圖像區域 $a_{i}$ 與對應的 weight $\alpha_{t,i}$ ，$\hat{Z}_t$ 就可以直接對權重做加總求和，從 hard attention  轉換到 soft attention 的 context vector：
 $$
-\mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
+\hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
 $$
 這計算方式將 weight vector $\alpha_i$ 參數化，讓公式是可微的，可以透過 backpropagation 做到 end-to-end 的學習。其方法是參考前面所介紹的 Bahdanau attention 而來。
 
@@ -320,7 +322,14 @@ NWGM[p(y_t=k|a)] & = \frac{\prod_i exp(n_{t,k,i})^{p(s_{t,i} = 1 | a)}}{\sum_j\p
 $$
 
 
-
+<figure class="image">
+<center>
+  <img src="./attention_soft_and_hard_visualization.png" style="zoom:90%" />
+  <figcaption>
+  圖六(Image credit:[Paper 2])
+  </figcaption>
+</center>
+</figure>
 
 ### Global Attention & Local Attention
 

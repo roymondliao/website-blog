@@ -8,7 +8,7 @@ categories:
     - NLP
     - Deep Learning
 tags: ["Attention", "Attention model", "Attention Mechanism"]
-markup: goldmark
+markup: mmark
 image:
   placement: 2
   caption: "Photo by Martin Adams on Unsplash"
@@ -173,32 +173,30 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 * Encoder
 
   在 encoder 端模型使用 CNN 來提取 low-level 的卷積層特徵，每一個特徵都對應圖像的一個區域
-
-	$$
-	a = \{a_1, \dots, a_L\}, a_i \in R^D
-	$$
-	總共有 $L$ 個特徵，特徵向量維度為 $D$。
+  	
+  $$ a = \{a_1, \dots, a_L\}, a_i \in R^D $$
+  
+  總共有 $L$ 個特徵，特徵向量維度為 $D$。
 
 * Decoder
 
   採用 LSTM 模型來生成字詞，而因應圖片的內容不同，所以標題的長度是不相同的，作者將標題 $y $ encoded 成一個 one-hot encoding 的方式來表示
   
-  $$
-  y = \{y_1, \dots, y_C\}, y_i \in R^K
-  $$
+  $$ y = \{y_1, \dots, y_C\}, y_i \in R^K $$
   
   K 為字詞的數量，C 為標題的長度。下圖為作者這本篇論文所採用的 LSTM 架構：
   
   <figure class="image">
   <center>
-    <img src="./attention_sotf_and_hard.png" style="zoom:50%" />
-    <figcaption>
-    圖五(Image credit:[Paper 2])
-    </figcaption>
+  <img src="./attention_soft_and_hard.png" style="zoom:50%" />
+  <figcaption>
+  圖五(Image credit:[Paper 2])
+  </figcaption>
   </center>
   </figure>
   
   利用 affine transformation 的方式  $$T_{s, t} : R^s \rightarrow R^t$$ 來表達 LSTM 的公式：
+
   $$
   \begin{pmatrix}
   i_t \\
@@ -227,11 +225,8 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   h_t & = o_t \odot tanh(c_t) \tag3
   \end{align}
   $$
-  
-  
-  
+
   其中
-  
   * $$i_t$$ : input gate
   * $$f_t$$ : forget gate
   * $$o_t$$ : ouput gate
@@ -242,12 +237,15 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   * $$\hat{Z} \in R^D$$ 是 context vector，代表捕捉特定區域視覺訊息的上下文向量，與時間 $t$ 有關，所以是一個動態變化的量
   
   特別注意的是作者在給定 memory state 與 hidden state 的初始值的計算方式使用了兩個獨立的多層感知器(MLP)，其輸入是各個圖像區域特徵的平均，計算公式如下： 
-  $$
-  c_0 = f_{init, c}( \frac{1}{L} \sum_{i}^L a_i) \\
-  h_0 = f_{init, h}( \frac{1}{L} \sum_{i}^L a_i) \\
-  $$
-  以及作者為了計算在 $t$ 時間下所關注的 context vector $\hat{Z_t}$ **定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。**權重 $$\alpha_i$$ 的產生是透過輸入 annotation vector $a_i$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
   
+  $$
+  \begin{align}
+  c_0 = f_{init, c}( \frac{1}{L} \sum_{i}^L a_i) \\
+  h_0 = f_{init, h}( \frac{1}{L} \sum_{i}^L a_i)
+  \end{align}
+  $$
+
+  以及作者為了計算在 $t$ 時間下所關注的 context vector $$\hat{Z_t}$$ **定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。**權重 $$\alpha_i$$ 的產生是透過輸入 annotation vector $$a_i$$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
   
   $$
   \begin{align}
@@ -258,9 +256,9 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   $$
   
   有了上述的資訊，在生成下一個 $t$ 時間的字詞機率可以定義為：
-  $$
-  p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7
-  $$
+
+  $$ p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7 $$
+
   其中 $$L_o \in R^{K \times m}, L_h \in R^{m \times n}, L_z \in R^{m \times D}$$，m 與 n 分別為 embedding dimension 與 LSTM dimension。
   
 
@@ -280,15 +278,13 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 在 hard attention 中定義區域變數(location variables) $s_{t, i}$ 為在 t 時間下，模型決定要關注的圖像區域，用 one-hot 的方式來表示，要關注的區域 $i$ 為 1，否則為 0。
 
 $s_{t, i}$ 被定為一個淺在變數(latent variables)，並且以 **multinoulli distriubtion** 作為參數 $\alpha_{t, i}$ 的分佈，而 $\hat{Z_t}$ 則被視為一個隨機變數，公式如下：
-$$
-p(s_{t, i} = 1 | s_{j, t}, a) = \alpha_{t, i} \tag8\\
-$$
 
-$$
-\hat{Z_t} = \sum_{i} s_{t, i}a_i \tag9
-$$
+$$ p(s_{t, i} = 1 | s_{j, t}, a) = \alpha_{t, i} \tag8 $$
+
+$$ \hat{Z_t} = \sum_{i} s_{t, i}a_i \tag9 $$
 
 定義新的 objective functipn $L_s$ 為 marginal log-likelihood $\text{log }p(y|a)$ 的下界(lower bound)
+
 $$
 \begin{align}
 L_s & = \sum_s p(s|a)\text{log }p(y|s,a) \\
@@ -296,6 +292,7 @@ L_s & = \sum_s p(s|a)\text{log }p(y|s,a) \\
 & = \text{log }p(y|a)
 \end{align}
 $$
+
 在後續的 $L_s$ 推導求解的過程，作者利用了 
 
 1. Monte Carlo 方法來估計梯度，利用 moving average 的方式來減小梯度的變異數
@@ -306,9 +303,9 @@ $$
 #### Soft attention (Deterministic Soft Attention)
 
 Soft attention 所關注的圖像區域並不像 hard attention 在特定時間只關注特定的區域，在 soft attention 中則是每一個區域都關注，只是關注的程度不同。透過對每個圖像區域 $a_{i}$ 與對應的 weight $\alpha_{t,i}$ ，$\hat{Z}_t$ 就可以直接對權重做加總求和，從 hard attention  轉換到 soft attention 的 context vector：
-$$
-\hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
-$$
+
+$$ \hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i $$
+
 這計算方式將 weight vector $\alpha_i$ 參數化，讓公式是可微的，可以透過 backpropagation 做到 end-to-end 的學習。其方法是參考前面所介紹的 Bahdanau attention 而來。
 
 由於公式(7)的定義了生成下一個 $t$ 時間的字詞機率，所以在這邊作者定義了 $$n_t = L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})$$，透過 expect context vector 

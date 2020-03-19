@@ -7,7 +7,7 @@ authors: ["Roymond Liao"]
 categories:
     - NLP
     - Deep Learning
-tags: ["Attention", "Attention model", "Attention Mechanism"]
+tags: ["Attention", "Attention Model", "Attention Mechanism", "Soft Attention", "Hard Attention", "Global Attention", "Local Attention"]
 markup: mmark
 image:
   placement: 2
@@ -451,6 +451,11 @@ $align(h_t,\bar{h_s})$ 與公式(1)一致，標準差設定為 $\sigma = \frac{D
 </center>
 </figure>
 
+Local attention 可能的會遇到的問題：
+
+1. 當 encoder 的 input sequence 長度不長時，計算量並不會減少
+2. 當 Aligned position $p_t$ 不準確時，會直接影響到 local attention 的準確度
+
 #### Input-feeding Approach
 
 作者認為在 global 與 local attention 的方法中，模型的注意力機制是獨立的，但是在整個翻譯的過程中，必須要去了解哪些資訊已經被翻譯了，所以在預測下一個翻譯字詞時，應該結合過去 attentional vectors $\tilde{h_t}$ 的資訊，也就是說在 deocder 這邊多考慮了 alignment model 的結果，如下圖所示：
@@ -478,7 +483,9 @@ $align(h_t,\bar{h_s})$ 與公式(1)一致，標準差設定為 $\sigma = \frac{D
 </center>
 </figure>
 
-**Attention score function**
+Global attention 與 local attention 都有自己的優勢，如果說要選用哪個方式來當作模型，認為因應不同的任務可能表現都會有所差異，所以建議兩種都實驗看看結果來比較優劣，而在實際上大多數採用的都是以 Global attention 為主。
+
+底下列出上面各篇論文所提到的 **Attention score function**：
 
 | Name               | Attention score function                      |
 | ------------------ | --------------------------------------------- |
@@ -490,7 +497,7 @@ $align(h_t,\bar{h_s})$ 與公式(1)一致，標準差設定為 $\sigma = \frac{D
 
 總結來說：
 
->  Attention 要實現的就是在 decoder 的不同時刻可以關注不同的圖像區域或是句子中的文字，進而可以生成更合理的詞。
+>  Attention 的目的就是要實現的就是在 decoder 的不同時刻可以關注不同的圖像區域或是句子中的文字，進而可以生成更合理的詞或是結果。
 
 ## Refenece
 

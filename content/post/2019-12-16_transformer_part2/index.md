@@ -129,6 +129,8 @@ $$
 
 下圖為論文中英文翻譯成法語的 attention distribution：
 
+在圖中 $[European \space Economic \space Area]$ 翻譯成$ [zone \space \acute{a}conomique \space europ\acute{e}enne] $ 的注意力分數上，模型成功地專注在對應的字詞上。
+
 <figure class="image">
 <center>
   <img src="./attention_bahdanau_output.png" style="zoom:90%" />
@@ -137,8 +139,6 @@ $$
   </figcaption>
 </center>
 </figure>
-
-在上圖中 $[European \space Economic \space Area]$ 翻譯成$ [zone \space \acute{a}conomique \space europ\acute{e}enne] $ 的注意力分數上，模型成功地專注在對應的字詞上。
 
 最後作者後續還有實驗了採用 LSTM 來替換 Vainlla RNN 進行實驗，詳細的公式都有列出在論文中，有興趣的可以看一下。
 

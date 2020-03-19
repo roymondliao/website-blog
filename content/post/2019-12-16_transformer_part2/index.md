@@ -234,7 +234,9 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   \end{align}
   $$
 
-  以及作者為了計算在 $t$ 時間下所關注的 context vector $$\hat{Z_t}$$ **定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。**權重 $$\alpha_i$$ 的產生是透過輸入 annotation vector $$a_i$$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
+  以及作者為了計算在 $t$ 時間下所關注的 context vector $$\hat{Z_t}$$ **定義了 attention machansim $\phi$ 為在 $t$ 時間，對於每個區域 $i$ 計算出一個權重 $$\alpha_{ti}$$ 來表示產生字詞 $y_t$ 需要關注哪個圖像區域  annotation vectors $a_i, i=1, \dots, L$ 的訊息。**
+  
+  權重 $$\alpha_i$$ 的產生是透過輸入 annotation vector $$a_i$$ 與前一個時間的 hidden state  $h_{t-1}$ 經由 attention model $f_{att}$ 計算所產生。
   
   $$
   \begin{align}
@@ -247,8 +249,9 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   有了上述的資訊，在生成下一個 $t$ 時間的字詞機率可以定義為：
 
   $$
-p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7
+  p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7
   $$
+  
   其中 $$L_o \in R^{K \times m}, L_h \in R^{m \times n}, L_z \in R^{m \times D}$$，m 與 n 分別為 embedding dimension 與 LSTM dimension。
   
 
@@ -277,7 +280,7 @@ $$
 \hat{Z_t} = \sum_{i} s_{t, i}a_i \tag9
 $$
 
-定義新的 objective functipn $L_s$ 為 marginal log-likelihood $\text{log }p(y|a)$ 的下界(lower bound)
+定義新的 objective function $L_s$ 為 marginal log-likelihood $\text{log }p(y|a)$ 的下界(lower bound)
 
 $$
 \begin{align}
@@ -297,9 +300,11 @@ $$
 #### Soft attention (Deterministic Soft Attention)
 
 Soft attention 所關注的圖像區域並不像 hard attention 在特定時間只關注特定的區域，在 soft attention 中則是每一個區域都關注，只是關注的程度不同。透過對每個圖像區域 $a_{i}$ 與對應的 weight $\alpha_{t,i}$ ，$\hat{Z}_t$ 就可以直接對權重做加總求和，從 hard attention  轉換到 soft attention 的 context vector：
+
 $$
 \hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
 $$
+
 這計算方式將 weight vector $\alpha_i$ 參數化，讓公式是可微的，可以透過 backpropagation 做到 end-to-end 的學習。其方法是參考前面所介紹的 Bahdanau attention 而來。
 
 作者在這邊提出三個理論：
@@ -309,6 +314,7 @@ $$
 3. 根據公式(7)定義 $$n_t = L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})$$
 
 所以 soft attention 在最後做文字的預測時作者定義了 softmax $k^{th}$ 的 normalized weighted geometric mean。
+
 $$
 \begin{align}
 NWGM[p(y_t=k|a)] & = \frac{\prod_i exp(n_{t,k,i})^{p(s_{t,i} = 1 | a)}}{\sum_j\prod_i exp(n_{t,j,i})^{p(s_{t,i} = 1 | a)}} \\

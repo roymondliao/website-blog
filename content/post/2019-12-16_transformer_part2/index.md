@@ -30,7 +30,7 @@ p(\mathrm{y}) & = \prod_{t=1}^T p(y_t | \{y_1, \cdots, y_{t-1}\}, c) \tag 1 \\
 \end{align}
 $$
 
-在第 $t$ 個字詞，字詞 $y_t$ 的條件機率：
+在第 $t$ 時間，字詞 $y_t$ 的條件機率：
 
 $$
 \begin{align}
@@ -38,7 +38,7 @@ p(y_t | \{y_1, \cdots, y_{t-1}\}, c) = g(y_{t-1}, s_t, c) \tag 2
 \end{align}
 $$
 
-當中 $g$ 唯一個 nonlinear function，$s_t$ 為 hidden state，c 為 context vector。
+當中 $g$ 唯一個 nonlinear function，可以為多層的架構，$s_t$ 為 hidden state，c 為 context vector。
 
 而在 Attention model 中，作者將 decoder 預測下一個字詞的的條件機率重新定義為：
 
@@ -58,18 +58,16 @@ $$
 
 將式子 (3) 與 (2) 相比就可以發現，每一個預測字詞 $y_i$ 對於 context vector 的取得，由原本都是固定的 C  轉變成 每個字詞預測都會取得不同的 $C_i$。
 
-Bahdanau Attention model 的架構如圖一：
+Bahdanau Attention model 的架構如圖1：
 
 <figure class="image">
 <center>
   <img src="./attention_bahdanau.png" style="zoom:60%" />
   <figcaption>
-  圖一(Image credit:[Paper 1])
+  圖1 (Image credit:[Paper 1])
   </figcaption>
 </center>
 </figure>
-
-
 
 Context vector $c_i$ 是取決於 sequence of annotations $$(h_1, h_2, \cdots, h_{T_x})$$ 的訊息，annotation $h_i$ 包含了在第 $i$ 步下， input sequence 輸入到 econder 的訊息。計算方法是透過序列權重加總 annotation $h_i$，公式如下：
 
@@ -96,7 +94,6 @@ $$
 
 **計算 attention  score $e_{ij}$ 中 $a$ 表示為 alignment model (對齊模型)，是衡量 input sequence 在位置 $j$ 與 output sequence 位置 $i$ 這兩者之間的關係**。
 這邊作者為了解決在計算上需要 $T_{x} \times T_{y}$ 的計算量，所以採用了 singlelayer multilayer perceptron 的方式來減少計算量，其計算公式：
-
 $$
 \begin{align}
 a(s_{i-1}, h_j) = v_a^Ttanh(W_aS_{i-1} + U_ah_j) \tag8
@@ -117,7 +114,7 @@ $$
 1. 我喜歡蘋果，因為它很好吃。
 2. 我喜歡蘋果，因為它很潮。
 
-下圖為 Bahdanau Attention model 的解析可以與圖一對照理解，這樣更能了解圖一的結構：
+下圖為 Bahdanau Attention model 的解析可以與圖1對照理解，這樣更能了解圖一的結構：
 
 > 需要注意的一點是在最一開始的 decoder hidden state $S_0$ 是採用 encoder 最後一層的 output 
 
@@ -125,7 +122,7 @@ $$
 <center>
   <img src="./attention_bahdanau_example.png" style="zoom:100%" />
   <figcaption>
-  圖二
+  圖2
   </figcaption>
 </center>
 </figure>
@@ -136,24 +133,16 @@ $$
 <center>
   <img src="./attention_bahdanau_output.png" style="zoom:90%" />
   <figcaption>
-  圖三(Image credit:[Paper 1])
+  圖3 (Image credit:[Paper 1])
   </figcaption>
 </center>
 </figure>
 
 在上圖中 $[European \space Economic \space Area]$ 翻譯成$ [zone \space \acute{a}conomique \space europ\acute{e}enne] $ 的注意力分數上，模型成功地專注在對應的字詞上。
 
+最後作者後續還有實驗了採用 LSTM 來替換 Vainlla RNN 進行實驗，詳細的公式都有列出在論文中，有興趣的可以看一下。
+
 # Attention Mechanism Family
-
-Attention score function:
-
-| Name               | Attention score function             |
-| ------------------ | ------------------------------------ |
-| Dot-product        | $e_{ij} = S_i^Th_j$                  |
-| General            | $e_{ij} = S_i^TWh_j$                 |
-| Additive           | $e_{ij} = v^Ttanh(WS_{i-1} + Uh_j) $ |
-| Scaled Dot-product | $e_{ij} = \frac{S_i^Th_j}{\sqrt{d}}$ |
-|                    |                                      |
 
 ### Hard Attention & Soft Attention 
 
@@ -163,7 +152,7 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 <center>
   <img src="./nic_figure1.jpg" style="zoom:70%" />
   <figcaption>
-  圖四(Image credit:[Paper 2])
+  圖4 (Image credit:[Paper 2])
   </figcaption>
 </center>
 </figure>
@@ -190,7 +179,7 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   <center>
   <img src="./attention_soft_and_hard.png" style="zoom:50%" />
   <figcaption>
-  圖五(Image credit:[Paper 2])
+  圖5 (Image credit:[Paper 2])
   </figcaption>
   </center>
   </figure>
@@ -225,7 +214,7 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   h_t & = o_t \odot tanh(c_t) \tag3
   \end{align}
   $$
-
+  
   其中
   * $$i_t$$ : input gate
   * $$f_t$$ : forget gate
@@ -257,8 +246,9 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
   
   有了上述的資訊，在生成下一個 $t$ 時間的字詞機率可以定義為：
 
-  $$ p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7 $$
-
+  $$
+p(y_t | a, y_1, y_2, \dots, y_{t-1}) \propto exp(L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})) \tag7
+  $$
   其中 $$L_o \in R^{K \times m}, L_h \in R^{m \times n}, L_z \in R^{m \times D}$$，m 與 n 分別為 embedding dimension 與 LSTM dimension。
   
 
@@ -268,7 +258,7 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 <center>
   <img src="./attention_soft_and_hard_example.png" style="zoom:90%" />
   <figcaption>
-  圖六
+  圖6
   </figcaption>
 </center>
 </figure>
@@ -279,9 +269,13 @@ Xu et al. [Paper 2] 對於圖像標題(caption)的生成研究中提出了 hard 
 
 $s_{t, i}$ 被定為一個淺在變數(latent variables)，並且以 **multinoulli distriubtion** 作為參數 $\alpha_{t, i}$ 的分佈，而 $\hat{Z_t}$ 則被視為一個隨機變數，公式如下：
 
-$$ p(s_{t, i} = 1 | s_{j, t}, a) = \alpha_{t, i} \tag8 $$
+$$
+p(s_{t, i} = 1 | s_{j, t}, a) = \alpha_{t, i} \tag8 
+$$
 
-$$ \hat{Z_t} = \sum_{i} s_{t, i}a_i \tag9 $$
+$$
+\hat{Z_t} = \sum_{i} s_{t, i}a_i \tag9
+$$
 
 定義新的 objective functipn $L_s$ 為 marginal log-likelihood $\text{log }p(y|a)$ 的下界(lower bound)
 
@@ -303,14 +297,18 @@ $$
 #### Soft attention (Deterministic Soft Attention)
 
 Soft attention 所關注的圖像區域並不像 hard attention 在特定時間只關注特定的區域，在 soft attention 中則是每一個區域都關注，只是關注的程度不同。透過對每個圖像區域 $a_{i}$ 與對應的 weight $\alpha_{t,i}$ ，$\hat{Z}_t$ 就可以直接對權重做加總求和，從 hard attention  轉換到 soft attention 的 context vector：
-
-$$ \hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}_{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i $$
-
+$$
+\hat{Z_t} = \sum_{i} s_{t, i}a_i \implies \mathbb{E}{p(s_t|a)}[\hat{Z_t}] = \sum_{i=1}^L \alpha_{t,i}a_i
+$$
 這計算方式將 weight vector $\alpha_i$ 參數化，讓公式是可微的，可以透過 backpropagation 做到 end-to-end 的學習。其方法是參考前面所介紹的 Bahdanau attention 而來。
 
-由於公式(7)的定義了生成下一個 $t$ 時間的字詞機率，所以在這邊作者定義了 $$n_t = L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})$$，透過 expect context vector 
+作者在這邊提出三個理論：
 
-另外 soft attention 在最後做文字的預測時作者定義了 softmax $k^{th}$ 的 normalized weighted geometric mean。
+1. $$\mathbb{E}{p(s_t|a)}[h_t]$$ 等同於透過 context vector $$\mathbb{E}{p(s_t|a)}[\hat{Z_t}]$$ 使用 forward propagation 的方法計算 $h_t$
+2. Normalized weighted geometric mean approximation
+3. 根據公式(7)定義 $$n_t = L_o(Ey_{t-1} + L_hh_t + L_z\hat{Z_t})$$
+
+所以 soft attention 在最後做文字的預測時作者定義了 softmax $k^{th}$ 的 normalized weighted geometric mean。
 $$
 \begin{align}
 NWGM[p(y_t=k|a)] & = \frac{\prod_i exp(n_{t,k,i})^{p(s_{t,i} = 1 | a)}}{\sum_j\prod_i exp(n_{t,j,i})^{p(s_{t,i} = 1 | a)}} \\
@@ -318,25 +316,171 @@ NWGM[p(y_t=k|a)] & = \frac{\prod_i exp(n_{t,k,i})^{p(s_{t,i} = 1 | a)}}{\sum_j\p
 \end{align}
 $$
 
+$$
+\mathbb{E}[n_t] =  L_o(Ey_{t-1} + L_h\mathbb{E}[h_t] + L_z\mathbb{E}[\hat{Z_t}])
+$$
+
+這邊的部分就是 soft attention  與 Bahdanau attention 的主要差異，在 Bahdanau attention 最後的 output 是透過 softmax 來取得下一次詞的機率，而作者在這邊採用了 NWGM 的方式。這邊並不是很清楚作者怎麼來證明這樣的論述，日後有理解出來或是有找到相關的參考再補上來。
+
+最後來看看 soft attention 與 hard attention 的圖像視覺化結果，下圖是兩種 attention 對於圖像區域注意程度，可以看得出 hard attention 都會專注在很小的區域，而 soft attention 的注意力相對發散，這也是因為 soft 與 hard 在關注圖像區域上的一個是注意全部的圖像區域，一個是注意特定的區域。
 
 <figure class="image">
 <center>
   <img src="./attention_soft_and_hard_visualization.png" style="zoom:90%" />
   <figcaption>
-  圖六(Image credit:[Paper 2])
+  圖7 (Image credit:[Paper 2])
   </figcaption>
 </center>
 </figure>
 
 ### Global Attention & Local Attention
 
+Loung et al. [Paper 3] 在 2015 年所發表了 global / local attention 來提升 NMT 任務上的準確度，global attention 類似於 soft attention，而 local attention 則介於 hard 與 soft attention 的混合。
+
+Global / local attention 相同之處：
+
+* 採用的 target hidden state $h_t$ 是 stacking LSTM 最後一層的 output
+* Context vector $c_t$ 都是將 $h_t$ 與 source-side $\bar{h_s}$ 作為 input 計算
+* 結合 $c_t$ 與 $h_t$ 的訊息計算 $$\tilde{h_t} = tanh\left(W_c[c_t;h_t]\right)$$，稱為 attentional vector 
+*  預測 $t$ 時間下的生成字詞的機率 $$ p(y_t|y_{\text{<}t}, x) = softmax(W_s\tilde{h_t})$$
+
+Global / local attention 不同之處：
+
+* Context vector $c_t$ 的計算方式不同
+* 採用 source side  $\bar{h_s}$ 的數量不同
+
+接下來分別介紹 global attention 與 local attention 當中的細節。
+
+#### Global attention
+
+作者將 alignment vector $a_t$ 定義是一個可變長度向量，所以在 global attention 中 $a_t$ 將全部時間的 source side 的資訊當作 input ，公式如下：
+$$
+\begin{align}
+a_t(s) &= align(h_t, \bar{h_s}) \tag 1 \\ 
+&= \frac{exp(score(h_t,\bar{h_s}))}{\sum_{s'}exp\left(score(h_t,\bar{h_{s'}})\right)}
+\end{align}
+$$
+在 score function 的部分，這邊定義了 **content-based function**，可以有以下三種形式：
 
 
+$$
+score(h_t, \bar{h_s}) = 
+\begin{cases}
+h_{t}^T\bar{h_s} & \text{dot} \\
+h_{t}^TW_a\bar{h_s} & \text{general} \\
+v_a^Ttanh\left(W_a[h_t;\bar{h_s}]\right) & \text{concat}
+\end{cases}
+$$
 
+其中 $W_a, v_a$ 都是透過訓練所得到的參數。
 
+另外還有一種 **local-based function**，score只單存參考 target hidden state $h_t$ 的結果
 
+$$
+\begin{align}
+a_t = softmax(W_ah_t) && \text{location} 
+\end{align}
+$$
 
+下圖為 global attention 的模型架構：
 
+<figure class="image">
+<center>
+  <img src="./attention_global.png" style="zoom:40%" />
+  <figcaption>
+  圖8 Global Attention (Image credit:[Paper 3])
+  </figcaption>
+</center>
+</figure>
+
+Global attention 與 Bahdanau attention 對比，差異的地方如下：
+
+1. 在 encoder 與 decoder 都採用最後一層的 LSTM output 作為 hidden state
+2. 計算順序為 $$h_t \rightarrow a_t \rightarrow c_t \rightarrow \tilde{h_t}$$，而 bahdanau attention 是 $$h_{t-1} \rightarrow a_t \rightarrow c_t \rightarrow h_t$$
+
+#### Local attention
+
+相較於 global attention 採用的所有 soucre side 的字詞，在計算上可能較為龐大，而且面對較長的句子可能無法翻譯正確的狀況，提出了 local attention，只專注關心一小部分的字詞來替代關注全部的字詞。
+
+前面提到 local attention 是 hard 與 soft attention 的混合，選擇性地關注一個數量較小的上下文窗口，並且是可以微分的，減少了 soft attention 的計算量以及避免了 hard attention 不可微分的問題，更容易的訓練。
+
+注意的重點：
+
+1. 在每個 $t$ 時間下生成 aligned position $p_t$ 
+2. Context vector $c_t$ 則是計算 $[p_t - D, p_t + D]$ 之間的 source hidden 做加權平均，$D$ 是可調的參數。如果所選擇的範圍超過句子本身的長度，則忽略掉多出來的部分，只考慮有存在的部分。
+3. Alignment vector $a_t \in R^{2D+1}$ 是固定的維度
+
+作者針對模型提出了兩遍變形：
+
+* Monotonic aligment (**local-m**)
+  > 假設 source 與 target sequences 是單調對齊，就是指 source 與  target 長度相同：
+  $$
+  p_t = t
+  $$
+  Alignment vector $a_t$ 的計算就跟公式(1)一致。
+
+* Predictive alignment (**local-p**)
+  > 認為 source 與 target sequences 是並非單調對齊，就是長度不相同：
+  $$
+  p_t = S \cdot sigmoid\left( v_p^Ttanh(W_ph_t)\right)
+  $$
+  $W_p, v_p$ 都是可訓練的模型參數，$S$ 則表示 source sequence 的長度，$p_t \in [0, S]$。
+
+Alignment vector $a_t$ 的計算採用的 Gaussian distribution 來賦予 alignment 的權重：
+
+$$
+a_t(s) = align(h_t,\bar{h_s})exp\left(-\frac{(s-p_t)^2}{2\sigma^2}\right)
+$$
+
+$align(h_t,\bar{h_s})$ 與公式(1)一致，標準差設定為 $\sigma = \frac{D}{2}$，這是透過實驗所得來。
+
+下圖為 local attention 的模型架構：
+
+<figure class="image">
+<center>
+  <img src="./attention_local.png" style="zoom:40%" />
+  <figcaption>
+  圖9 Local Attention (Image credit:[Paper 3])
+  </figcaption>
+</center>
+</figure>
+
+#### Input-feeding Approach
+
+作者認為在 global 與 local attention 的方法中，模型的注意力機制是獨立的，但是在整個翻譯的過程中，必須要去了解哪些資訊已經被翻譯了，所以在預測下一個翻譯字詞時，應該結合過去 attentional vectors $\tilde{h_t}$ 的資訊，也就是說在 deocder 這邊多考慮了 alignment model 的結果，如下圖所示：
+
+<figure class="image">
+<center>
+  <img src="./attention_global_and_local_input_feeding.png" style="zoom:40%" />
+  <figcaption>
+  圖10 Image credit:[Paper 3])
+  </figcaption>
+</center>
+</figure>
+
+來看看論文中的針對各個模型在 WMT'14 英文翻譯成德文資料集的訓練結果：
+
+* 這邊的實驗限制了字詞的數量，只取在資料集中最常出現的 50k 字詞當作 corpos
+* 如果出現字詞沒有在 corpos 中，則用 **\<unk\>** 來取代
+
+<figure class="image">
+<center>
+  <img src="./attention_global_and_local_result.png" style="zoom:40%" />
+  <figcaption>
+  圖11 (Image credit:[Paper 3])
+  </figcaption>
+</center>
+</figure>
+
+**Attention score function**
+
+| Name               | Attention score function                      |
+| ------------------ | --------------------------------------------- |
+| Dot-product        | $score(s_t, h_i) = S_t^Th_i$                  |
+| General            | $score(s_t, h_i) = S_t^TW_ah_i$               |
+| Additive           | $score(s_t, h_i) = v^Ttanh(WS_{t-1} + Uh_i) $ |
+| Scaled Dot-product | $score(s_t, h_i) = \frac{S_t^Th_i}{\sqrt{d}}$ |
+| Loocation          | $a_{t} = softmax(W_aS_t)$                     |
 
 總結來說：
 
@@ -360,6 +504,11 @@ Illustrate:
 5. https://www.cnblogs.com/Determined22/p/6914926.html
 6. https://jhui.github.io/2017/03/15/Soft-and-hard-attention/
 7. http://download.mpi-inf.mpg.de/d2/mmalinow-slides/attention_networks.pdf
+8. https://www.jiqizhixin.com/articles/2018-06-11-16
+9. https://medium.com/@joealato/attention-in-nlp-734c6fa9d983
+10. https://towardsdatascience.com/attn-illustrated-attention-5ec4ad276ee3
+11. https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html#a-family-of-attention-mechanisms
+12. https://zhuanlan.zhihu.com/p/80692530
 
 Tutorial:
 

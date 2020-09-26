@@ -51,7 +51,7 @@ Embedding and softmax 這個部分應該比較少看到有人在文章中提出�
 >
 > 在 Using the Output Embedding to Improve Language Models 這篇 paper 有提到他們最好的做法，叫做 `three-way weight tying (TWWT)`，意思就是 input embedding (encoder)、input embedding (decoder)、output embedding (decoder) 都是共享，但如果要達到能夠都共享，在字詞的處理上就需要用到 subwoard (子字詞) 概念的處理方式，目前的處理方式有，Byte Pair Encoding (BPE)、WordPiece 與 Unigram Language Model 這三種方法。
 >
-> 另外有一個重點，雖然 weight 是共享，但是各層的 bias 是獨立的。那為什麼 transformer 的 embedding 要乘上 $\sqrt{d_{model}}$，我的猜測可能是為了放大 embedding 空間，放讓在最後過 softmax 的時候，讓真正的答案可以得到較高的 probability。不過以上這些 trick 很遺憾的只能在英文相似語系的任務上有用，在中文上是沒用的... 因為中文沒有所謂的 subword，中文一個字就是一個詞，無法被拆解，所以在處理中文的任務上，要讓模型夠泛化用字，要讓模型有更好的理解用 n-gram。
+> 另外有一個重點，雖然 weight 是共享，但是各層的 bias 是獨立的。那為什麼 transformer 的 embedding 要乘上 $\sqrt{d_{model}}$，我的猜測可能是為了放大 embedding 空間，放讓在最後過 softmax 的時候，讓真正的答案可以得到較高的 probability。
 
 ---
 ## Positional Encoding

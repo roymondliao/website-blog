@@ -43,7 +43,7 @@ Word-base 的處理方式有幾項缺點：
 
    由統計結果可以得知 word base 的處理在資料上是非常稀疏的。
 
-2. **資料稀疏(data sparsity)**的問題，會造成 **model overfitting** 而且也會產生大量的參數，所以如果要維護一個龐大的字詞語料庫，可想而知在現實狀況的處理上這是不洽當的。
+2. **資料稀疏(data sparsity)** 的問題，會造成 **model overfitting** 而且也會產生大量的參數，所以如果要維護一個龐大的字詞語料庫，可想而知在現實狀況的處理上這是不洽當的。
 
 3. 在斷詞上的錯誤會連帶給下游任務帶來 bias，尤其中文在斷詞的處理上有許多模糊的邊界地帶。例如：部分居民生活水平，正確的切分為 `部分/居民/生活/水平`，但也被切成 ` 部/分居/民生/活/水平` 的狀況
 
@@ -107,7 +107,8 @@ Detail:
   </figcaption>
 </center>
 </figure>
-**EN-CH **的實驗部分，char-based model 的表現則遠遠優於 word-based model，平均整整高出了 3.13 分。對比 **CH-EN** 的實驗結果，會有如此大的差距，是因為在 CH-EN 的斷詞處理只有在 source 部分，而對於 EH-CH 的斷詞處理則在 source 與 target 都有。
+
+**EN-CH** 的實驗部分，char-based model 的表現則遠遠優於 word-based model，平均整整高出了 3.13 分。對比 **CH-EN** 的實驗結果，會有如此大的差距，是因為在 CH-EN 的斷詞處理只有在 source 部分，而對於 EH-CH 的斷詞處理則在 source 與 target 都有。
 
 <figure class="image"> 
 <center>
@@ -196,7 +197,7 @@ Detail:
 
 透過各項的實驗結果來看，可以了解 word-based model 表現比較差的原因如下：
 
-#### Data Sparsity
+### Data Sparsity
 
 為了避免 vocabulary 的資料量過大，通常會對字詞出現的頻次設定一個 threshold ，如果字詞出現的頻次低於 threshold 的門檻，其 token 就用 `UNK` 來顯示，下圖表示了詞表大小與 threshold 設定的關係以及 threshold 的設定與 model 的表現：
 
@@ -208,11 +209,12 @@ Detail:
   </figcaption>
 </center>
 </figure>
+
 從上圖的關係可以得知，當字詞頻次的 threshold 的值越高，model 的表現就會越來越接近，反之 threshold 越小，model 的表現越差。在這樣的結果下作者認為如果字詞出現的頻次太小，不管是 word/char-base 都難以學到語句的意義，就像人類對於不常看見的文字也是缺乏理解。(不過這邊 char-base 的表現並不是那麼的明顯)
 
 此外，在實驗中 char-based model 最好的結果是 `threshold=5`，詞表大小為 1432，字詞的頻次的中位數為 72，而 word-based model  最好的結果是 `threshold=50`，詞表大小為 1355，字詞的頻次的中位數為 83，可以發現兩個方法最好模型的結果所對應的詞表大小與字詞頻次中位數的數值都差不多，也就是說，為了讓 word/char-based model 能夠學習到更好的語義訊息，需要讓每個 word/char 能夠有足夠的曝光(表示在詞表中詞出現的頻次需求)，word-based model 由於詞表數據過多，特徵過多，且部分字詞出現的頻次不足，所以表現較差。
 
-#### Out-of-Vocabualary Words
+### Out-of-Vocabualary Words
 
 Word-based model 表現得不好的其中一個原因就是包含太多 OOV，但是在前面 **data sparsity** 的部分也說明到，如果降低字詞頻次的門檻，那將會導致稀疏程度的增加，而影響模型的表現。於是作者進行了一項實驗，對於不同的 threshold，將包含OOV 的語句從 training、validation 與 testing 資料集中移除，下圖顯示實驗的結果：
 
@@ -227,7 +229,7 @@ Word-based model 表現得不好的其中一個原因就是包含太多 OOV，�
 
 可以看見當增加字詞出現的頻次後，兩個模型之間的差距正在逐漸地縮小；持續將 threshold 調高，word-based model 的表現持續往上提高，就算調高 50 也是持續上升，這就表示 word-based model 可以透過減少 OOV 語句數量來減緩模型的表現較差的狀況，不過這邊這樣的處理方式在現實的環境上是不太可能，除非在建構 hybird system 有專門的模型或是方法來處理 OOV 的句子。
 
-#### Overfitting
+### Overfitting
 
 **Data sparsity** 的問題導致 word-based model 需要更多的參數來學習，因此更容易的 **overfitting**。根據這個假設作者透過 BQ 的資料來進行實驗，其實驗結果如下：
 

@@ -22,7 +22,7 @@ NLP 領域在近年的突破性發展，各項研究應用與相關論文不斷�
 
 字詞的**斷詞方法**一直都是 NLP 相關任務的重點，尤其是目前為主流的 pretrain model 研究發展走向，好的斷詞可讓機器理解整句話所要表達的意思也可以推論語句的結構，反之不好的斷詞可能會讓機器理解錯誤也連帶影響後續的下游任務表現。
 
-在本次要節錄的論文是由[香儂科技(Shannon AI)](https://www.shannonai.com/) 發表在ACL上的一篇論文，主要是探討基於深度學習的中文 NLP 任務中對於中文字斷詞的處理方式，是要以**詞(word-base)** 還是**字(char-base)**的處理方式比較。
+在本次要節錄的論文是由[香儂科技(Shannon AI)](https://www.shannonai.com/) 發表在ACL上的一篇論文，主要是探討基於深度學習的中文 NLP 任務中對於中文字斷詞的處理方式，是要以**詞(word-base)** 還是**字(char-base)** 的處理方式比較。
 
 ## Introduction
 
@@ -47,7 +47,7 @@ Word-base 的處理方式有幾項缺點：
 
 3. 在斷詞上的錯誤會連帶給下游任務帶來 bias，尤其中文在斷詞的處理上有許多模糊的邊界地帶。例如：部分居民生活水平，正確的切分為 `部分/居民/生活/水平`，但也被切成 ` 部/分居/民生/活/水平` 的狀況
 
-此外，在 neural network model 流行之前，`斷詞的必要性`就已經有被拿來討論，是否斷詞能帶來模型的效能提升。在 2004 年 Schubert Foo and Hui Li.[^1] 討論在 Information retrieval(IR) 系統上 CWS 的影響，研究顯示在文本搜尋上使用 CWS 的 model 表現並不是每次都比沒有使用 CWS 的模型來的好。另外在 Xu et al. (2004) [^2] 、Zhao et al. (2013)[^3] 、Liu et al. (2007)[^4] 都提出了使用 CWS 的處理，並沒有能夠有效的提升模型的效能。
+此外，在 neural network model 流行之前，`斷詞的必要性`就已經有被拿來討論，是否斷詞能帶來模型的效能提升。在 2004 年 Schubert Foo and Hui Li.[^1] 討論在 Information retrieval(IR) 系統上 CWS 的影響，研究顯示在文本搜尋上使用 CWS 的 model 表現並不是每次都比沒有使用 CWS 的模型來的好。另外在 Xu et al. (2004)[^2] 、Zhao et al. (2013)[^3] 、Liu et al. (2007)[^4] 都提出了使用 CWS 的處理，並沒有能夠有效的提升模型的效能。
 
 綜合以上所提出的論點，本篇論文就以下面這句話來作為主軸，來探討其必要性。
 
@@ -79,7 +79,8 @@ Detail:
   </figcaption>
 </center>
 </figure>
-由上表可得知，在 language modeling 任務中 char-base 的表現遠優於其他的處理方式。另外作者也嘗試採用不同的套件 CWS package (Monroe et al., 2014)[^8]與 LTP package (Che et al., 2010)[^9]對字詞做斷詞的處理，得到的結果與上述雷同。當中 hybird(char only) 的處理方式，是一個先用 word-base 的斷詞，然後在 embedding 的使用則是將 word 的組成拆成 char-base 作為輸入。
+
+由上表可得知，在 language modeling 任務中 char-base 的表現遠優於其他的處理方式。另外作者也嘗試採用不同的套件 CWS package (Monroe et al., 2014)[^8] 與 LTP package (Che et al., 2010)[^9] 對字詞做斷詞的處理，得到的結果與上述雷同。當中 hybird(char only) 的處理方式，是一個先用 word-base 的斷詞，然後在 embedding 的使用則是將 word 的組成拆成 char-base 作為輸入。
 
 #### 2. Machine Translation
 
@@ -89,7 +90,7 @@ Detail:
   * Training set: 使用 [LDC corpora.](https://www.ldc.upenn.edu/) 的 CH-EN/EN-CH當作訓練資料，當中包含 1.25M 的中翻英語句
   * Validation set: [NIST](https://www.nist.gov/) 2002
   * Testing set: NIST 2003, 2004, 2005, 2006 與 2008
-  * 使用 top 30,000 個英文字與 27,500 的中文當作詞庫；對於 char-base 的部分，vocab size 只有 4,500. 個字
+  * 使用 top 30,000 個英文字與 27,500 的中文當作詞庫；對於 char-base 的部分，vocab size 只有 4,500 個字
 * Model
   * 模型使用 SEQ2SEQ + Attention (Sutskever et al., 2014[^10]; Luong et al., 2015[^11])
   * 採用 bag-of-words 的機制 Ma et al. (2018)[^12]
@@ -299,22 +300,15 @@ Word-based model 表現得不好的其中一個原因就是包含太多 OOV，�
 # Reference
 
 [^1]:  Schubert Foo and Hui Li. 2004. Chinese word segmentation and its effect on information retrieval. Information processing & management, 40(1):161–190.
-[^2 ]: Xin Liu, Qingcai Chen, Chong Deng, Huajun Zeng, Jing Chen, Dongfang Li, and Buzhou Tang. 2018. Lcqmc: A large-scale chinese question matching corpus. In Proceedings of the 27th International Conference on Computational Linguistics, pages 1952–1962.
-
-[^3 ]: Hai Zhao, Masao Utiyama, Eiichiro Sumita, and BaoLiang Lu. 2013. An empirical study on word segmentation for chinese machine translation. In International Conference on Intelligent Text Processing and Computational Linguistics, pages 248–263. Springer.
+[^2]: Xin Liu, Qingcai Chen, Chong Deng, Huajun Zeng, Jing Chen, Dongfang Li, and Buzhou Tang. 2018. Lcqmc: A large-scale chinese question matching corpus. In Proceedings of the 27th International Conference on Computational Linguistics, pages 1952–1962.
+[^3]: Hai Zhao, Masao Utiyama, Eiichiro Sumita, and BaoLiang Lu. 2013. An empirical study on word segmentation for chinese machine translation. In International Conference on Intelligent Text Processing and Computational Linguistics, pages 248–263. Springer.
 [^4]: Wei Liu, Ben Allison, David Guthrie, and Louise Guthrie. 2007. Chinese text classiﬁcation without automatic word segmentation. In Sixth International Conference on Advanced Language Processing and Web Information Technology (ALPIT 2007), pages 45–50. IEEE.
 [^5]: Rongchao Yin, Quan Wang, Peng Li, Rui Li, and Bin Wang. 2016. Multi-granularity chinese word embedding. In Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing, pages 981–986.
 [^6]: Chuanhai Dong, Jiajun Zhang, Chengqing Zong, Masanori Hattori, and Hui Di. 2016. Characterbased lstm-crf with radical-level features for chinese named entity recognition. In Natural Language Understanding and Intelligent Applications, pages 239250. Springer.
 [^7]: Jinxing Yu, Xun Jian, Hao Xin, and Yangqiu Song. 2017. Joint embeddings of chinese words, characters, and ﬁne-grained subcharacter components. In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing, pages 286–291.
-
-[^ 8]: Will Monroe, Spence Green, and Christopher D Manning. 2014. Word segmentation of informal arabic with domain adaptation. In Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), volume 2, pages 206–211.
+[^8]: Will Monroe, Spence Green, and Christopher D Manning. 2014. Word segmentation of informal arabic with domain adaptation. In Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), volume 2, pages 206–211.
 [^9]: Wanxiang Che, Zhenghua Li, and Ting Liu. 2010. Ltp:A chinese language technology platform. In Proceedings of the 23rd International Conference on Computational Linguistics: Demonstrations, pages 13–16. Association for Computational Linguistics.
 [^10]: Ilya Sutskever, Oriol Vinyals, and Quoc V Le. 2014. Sequence to sequence learning with neural networks. In Advances in neural information processing systems, pages 3104–3112.
 [^11]: Minh-Thang Luong, Hieu Pham, and Christopher D Manning. 2015. Effective approaches to attentionbased neural machine translation. ACL.
 [^12]: Shuming Ma, Xu Sun, Yizhong Wang, and Junyang Lin. 2018. Bag-of-words as target for neural machine translation. arXiv preprint arXiv:1805.04871.
-
 [^13]: Zhiguo Wang, Wael Hamza, and Radu Florian. 2017.Bilateral multi-perspective matching for natural language sentences. IJCAI.
-
-
-
-

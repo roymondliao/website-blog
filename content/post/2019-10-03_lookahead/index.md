@@ -6,6 +6,7 @@ draft: false
 authors: ["Roymond Liao"]
 categories:
     - Optimizer
+    - Deep Learning
 tags: ["Optimizer"]
 markup: mmark
 # Projects (optional).
